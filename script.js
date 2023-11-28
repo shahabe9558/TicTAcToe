@@ -42,13 +42,50 @@ initialize();
 function handleClick(index){
     if(gameGrid[index] === "")
     {
-        boxes[index].style.pointerEvents = "none";
         boxes[index].textContent = currentPlayer;
+        boxes[index].style.pointerEvents = "none";
         gameGrid[index] = currentPlayer;
         swapTurns();
         gameInfo.textContent = `Current Player : ${currentPlayer}`;
         checkGameOver();
-        
+    }
+}
+
+// Check Game is Over or Not 
+function checkGameOver() {
+    let winner = "";
+    winningPositions.forEach((position) => {
+        if ((gameGrid[position[0]] !== "" || gameGrid[position[1]] !== "" || gameGrid[position[2]] !== "") && (gameGrid[position[0]] === gameGrid[position[1]]) && (gameGrid[position[1]] === gameGrid[position[2]])) {
+            boxes.forEach((box) => {
+                box.style.pointerEvents = "none";
+            });
+
+            winner = gameGrid[position[0]] === "X" ? "X" : "O";
+
+            boxes[position[0]].classList.add("win");
+            boxes[position[1]].classList.add("win");
+            boxes[position[2]].classList.add("win");
+        }
+    });
+
+    if (winner !== "") {
+        gameInfo.textContent = `Winner is - ${winner}`;
+        newGameBtn.classList.add("active");
+        return;
+    }
+
+
+    // Here is not winner yet Check for tie
+    let fillCount = 0;
+    gameGrid.forEach((box) => {
+        if (box !== "") {
+            fillCount++;
+        }
+    });
+
+    if (fillCount === 9) {
+        gameInfo.textContent = "Game Tied !";
+        newGameBtn.classList.add("active");
     }
 }
 
